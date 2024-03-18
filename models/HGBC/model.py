@@ -666,6 +666,9 @@ class Model():
 
         print("[*] Saving the plots")
 
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_dir)
+
         
         theta_list = np.linspace(0.9,1.1,10)
         s_list = []
@@ -687,8 +690,11 @@ class Model():
         hep.atlas.text(loc=1, text = " ")
 
         # plot file location on Atlas1 (same as local, but I can use linux functionalities for paths)
-        save_path_s = os.path.join(submissions_dir, "Plots and serialization/")
+        save_path_s = os.path.join(submissions_dir, "HGBC_saved")
         plot_file_s = os.path.join(save_path_s, "HGBC_s.png")
+
+        if not os.path.exists(save_path_s):
+            os.makedirs(save_path_s)
 
         plt.savefig(plot_file_s)
         plt.close(fig_s) # So the figure is not diplayed 
@@ -704,8 +710,11 @@ class Model():
         hep.atlas.text(loc=1, text = " ")
 
         # plot file location on Atlas1 (same as local, but I can use linux functionalities for paths)
-        save_path_b = os.path.join(submissions_dir, "Plots and serialization/")
-        plot_file_b = os.path.join(save_path_b, "HGBC_b.png")
+        save_path_b = os.path.join(submissions_dir, "HGBC_saved")
+        plot_file_b = os.path.join(save_path_s, "HGBC_b.png")
+
+        if not os.path.exists(save_path_b):
+            os.makedirs(save_path_b)
 
         plt.savefig(plot_file_b)
         plt.close(fig_b) # So the figure is not diplayed 
