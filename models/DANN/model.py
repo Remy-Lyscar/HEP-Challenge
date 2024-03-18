@@ -727,7 +727,7 @@ class Model():
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
-        model_dir = os.path.join(parent_dir, "Piviot_saved")   
+        model_dir = os.path.join(parent_dir, "DANN_saved")   
         model_path = os.path.join(model_dir, "model.h5")
         settings_path = os.path.join(model_dir, "settings.pkl")
         scaler_path = os.path.join(model_dir, "scaler.pkl")
