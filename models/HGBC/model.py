@@ -112,7 +112,7 @@ class Model():
         self.mu_hat_calc()
         self._validate()
         self._compute_validation_result()
-        self._theta_plot()
+        # self._theta_plot()
         self._save_model()
 
     def predict(self, test_set):
@@ -716,15 +716,22 @@ class Model():
     def _save_model(self):
 
 
-        save_dir= os.path.join(submissions_dir, "Plots and serialization/")
-        model_path = os.path.join(save_dir, "model.pkl")
-        settings_path = os.path.join(save_dir, "settings.pkl")
-        scaler_path = os.path.join(save_dir, 'scaler.pkl')
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_dir)
+        model_dir = os.path.join(parent_dir, "HGBC_saved")   
+        model_path = os.path.join(model_dir, "model.h5")
+        settings_path = os.path.join(model_dir, "settings.pkl")
+        scaler_path = os.path.join(model_dir, "scaler.pkl")
+
 
         print("[*] Saving Model")
         print(f"[*] --- model path: {model_path}")
         print(f"[*] --- settings path: {settings_path}")
         print(f"[*] --- scaler path: {scaler_path}")
+
+
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
 
 
         settings = {

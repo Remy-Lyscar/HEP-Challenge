@@ -74,7 +74,8 @@ class Scoring:
         self.output_dir = os.path.join(root_dir_name, output_dir_name)
         # reference data (test labels)
         # self.reference_dir = os.path.join(root_dir_name, reference_dir_name)
-        self.reference_dir = os.path.join("/data", "atlas","chakkappai","Full_dataset_01_03_2024","reference_data")
+        # self.reference_dir = os.path.join("/data", "atlas","chakkappai","Full_dataset_01_03_2024","reference_data")
+        self.reference_dir = os.path.join("C:/", "Users","remyl", "HEP-Challenge", "reference_data")
         # submitted/predicted labels
         self.prediction_dir = os.path.join(root_dir_name, predictions_dir_name)
 
