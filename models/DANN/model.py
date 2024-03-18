@@ -32,6 +32,8 @@ from tensorflow.keras.layers import Input, Dense, Concatenate
 from tensorflow.keras.models import Model as KerasModel
 from tensorflow.keras.models import save_model
 from tensorflow.keras import backend as K
+
+from tensorflow.keras.saving import register_keras_serializable
 # ------------------------------
 # Constants
 # ------------------------------
@@ -46,13 +48,16 @@ EPSILON = np.finfo(float).eps
 # Gradient Reversal model
 # ------------------------------
 
-import os
+
 # reduce number of threads
 os.environ['TF_NUM_INTEROP_THREADS'] = '1'
 os.environ['TF_NUM_INTRAOP_THREADS'] = '1'
+
+
 import tensorflow as tf
 
 
+@register_keras_serializable(package = "my_package", name = "grad_reverse")
 @tf.custom_gradient
 def grad_reverse(x, scale=0.2):
 #def grad_reverse(x, scale=1.):
@@ -61,6 +66,8 @@ def grad_reverse(x, scale=0.2):
         return -dy * scale
     return y, custom_grad
 
+
+@register_keras_serializable(package = "MyLayers")
 class GradReverse(tf.keras.layers.Layer):
     def __init__(self):
         super(GradReverse, self).__init__()
@@ -718,29 +725,31 @@ class Model():
     def _save_model(self):
 
 
-        save_dir= os.path.join(submissions_dir, "Plots and serialization/")
-        model_path = os.path.join(save_dir, "model.keras")
-        settings_path = os.path.join(save_dir, "settings.pkl")
-        scaler_path = os.path.join(save_dir, 'scaler.pkl')
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_dir)
+        model_dir = os.path.join(parent_dir, "Piviot_saved")   
+        model_path = os.path.join(model_dir, "model.h5")
+        settings_path = os.path.join(model_dir, "settings.pkl")
+        scaler_path = os.path.join(model_dir, "scaler.pkl")
 
         print("[*] Saving Model")
         print(f"[*] --- model path: {model_path}")
         print(f"[*] --- settings path: {settings_path}")
         print(f"[*] --- scaler path: {scaler_path}")
 
+
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+
         self.model.save(model_path)
+
 
         settings = {
             "threshold": self.threshold,
-            # "calibration": self.calibration,
-            # "threshold_candidates": self.threshold_candidates,
-            # "mu_scan": self.mu_scan,
             "beta_roi": self.beta_roi,
             "gamma_roi": self.gamma_roi
         }
 
-        with open("settings.json", "w") as f:
-            json.dump(settings, f)   #dump serializes a Python object in the file f, here "settings.json"
 
         pickle.dump(settings, open(settings_path, "wb"))
 
