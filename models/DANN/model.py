@@ -122,7 +122,7 @@ class Model():
         self.threshold = 0.7
         self.bins = 1
         self.scaler = StandardScaler()
-        self.mu_scan = np.linspace(0, 4, 100)   # ??
+        self.mu_scan = np.linspace(0, 4, 100)   
         self.plot_count = 2
         self.calibration = None
 
@@ -640,12 +640,15 @@ class Model():
             # print(f"[*] --- s: {s}")
             # print(f"[*] --- b: {b}")
 
+        sigma_s = np.std(s_list, ddof = 1)
+        sigma_b = np.std(b_list, ddof=1)
 
         fig_s = plt.figure()
         plt.plot(theta_list, s_list, 'b.', label = 's')
         plt.xlabel('theta')
         plt.ylabel('events')
         plt.legend(loc = 'lower right')
+        plt.text(0.5, 0.0, f"standard deviation: sigma = {sigma_s:.8f}", ha='center', va='center', transform=fig_s.transFigure) 
         hep.atlas.text(loc=1, text = " ")
 
         # plot file location on Atlas1 (same as local, but I can use linux functionalities for paths)
@@ -666,6 +669,7 @@ class Model():
         plt.xlabel('theta')
         plt.ylabel('events')
         plt.legend(loc = 'lower right')
+        plt.text(0.5, 0.0, f"standard deviation: sigma = {sigma_b:.8f}", ha='center', va='center', transform=fig_b.transFigure)
         hep.atlas.text(loc=1, text = " ")
 
         # plot file location on Atlas1 (same as local, but I can use linux functionalities for paths)
