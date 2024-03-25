@@ -100,9 +100,8 @@ class Model():
 
 
     def _return_score(self, X):
-        y_predict = self.model.predict(X,verbose=0)
-        y_predict = y_predict.pop(0)
-        y_predict = y_predict.ravel()
+        y_pred_skgb = self.model.predict_proba(X)[:,1]
+        y_predict = y_pred_skgb.ravel()
         return np.array(y_predict)
 
     def predict(self, test_set):
