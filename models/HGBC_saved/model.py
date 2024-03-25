@@ -172,7 +172,7 @@ class Model():
         settings_file = os.path.join(submissions_dir, "settings.pkl")
         scaler_file = os.path.join(submissions_dir, "scaler.pkl")
 
-        self.model = pickle.load(open(model_file), 'rb')
+        self.model = pickle.load(open(model_file, 'rb'))
         
         settings = pickle.load(open(settings_file, "rb"))
 
