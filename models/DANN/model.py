@@ -679,7 +679,7 @@ class Model():
         plt.close(fig_b) # So the figure is not diplayed 
         
 
-        del self.holdout
+        # del self.holdout
 
     def _validate(self):
         for valid_set in self.validation_sets:
@@ -729,7 +729,7 @@ class Model():
 
 
         print(f"[*] --- validation delta_mu_hat (avg): {np.round(np.mean(self.validation_delta_mu_hats), 4)}")
-        del self.validation_sets
+        # del self.validation_sets
 
     def _save_model(self):
 
