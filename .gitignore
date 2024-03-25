@@ -5,3 +5,6 @@ __pycache__
 public_data/
 public_data.zip
 
+
+input_data
+reference_data
