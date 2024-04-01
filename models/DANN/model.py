@@ -471,7 +471,7 @@ class Model():
 
     def _fit(self, X, Y, Z, w):
         print("[*] --- Fitting Model")
-        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=1, batch_size=2*1024, verbose=1)
+        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=4, batch_size=2*1024, verbose=1)
 
     def _return_score(self, X):
         y_predict = np.array(self.model.predict(X))
