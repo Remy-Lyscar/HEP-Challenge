@@ -471,14 +471,17 @@ class Model():
 
     def _fit(self, X, Y, Z, w):
         print("[*] --- Fitting Model")
-        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=4, batch_size=2*1024, verbose=1)
+        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=2, batch_size=2*1024, verbose=1)
 
     def _return_score(self, X):
-        y_predict = np.array(self.model.predict(X))
-        print(y_predict)
+        y_predict = self.model.predict(X)
+        y_predict = y_predict.pop(0)
+        y_predict = y_predict.ravel()
+        # y_predict = np.array(self.model.predict(X))
+        # print(y_predict)
         # y_predict = y_predict.ravel()
         # print("[*] --- y_predict: ", y_predict)
-        return y_predict
+        return np.array(y_predict)
 
     def _predict(self, X, theta):
         Y_predict = self._return_score(X)
