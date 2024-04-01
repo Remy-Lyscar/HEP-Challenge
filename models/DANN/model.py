@@ -142,7 +142,7 @@ class Model():
         self._generate_validation_sets()
         self._init_model()
         self._train()
-        self._predict_holdout()
+        # self._predict_holdout()
         self.mu_hat_calc()
         # self._validate()
         # self._compute_validation_result()
@@ -168,7 +168,11 @@ class Model():
         print("[*] - Testing")
         test_df = test_set['data']
         test_df = self.scaler.transform(test_df)
-        Y_hat_test = self._return_score(test_df)
+        Y_hat_score = self._return_score(test_df)
+        print(Y_hat_score)
+        Y_hat_test = self._predict(test_df, self.threshold)
+        print(Y_hat_test)
+
 
         print("[*] - Computing Test result")
         weights_train = self.train_set["weights"].copy()
@@ -178,12 +182,12 @@ class Model():
         print(f"[*] --- total weight train: {weights_train.sum()}")
         print(f"[*] --- total weight mu_cals_set: {self.holdout['weights'].sum()}")
 
-        weight_clean = weights_test[Y_hat_test > self.threshold]
-        test_df = test_set['data'][Y_hat_test > self.threshold]
+        # weight_clean = weights_test[Y_hat_test > self.threshold]
+        # test_df = test_set['data'][Y_hat_test > self.threshold]
         
         
         # get n_roi
-        n_roi = (weight_clean.sum())
+        n_roi = (weights_test[Y_hat_test == 1]).sum()
 
         mu_hat = (n_roi - self.beta_roi)/self.gamma_roi
 
@@ -467,18 +471,18 @@ class Model():
 
     def _fit(self, X, Y, Z, w):
         print("[*] --- Fitting Model")
-        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=4, batch_size=2*1024, verbose=1)
+        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=1, batch_size=2*1024, verbose=1)
 
     def _return_score(self, X):
         y_predict = self.model.predict(X)
-        y_predict = y_predict.pop(0)
+        # y_predict = y_predict.pop(0)
         y_predict = y_predict.ravel()
-        print("[*] --- y_predict: ", y_predict)
-        return np.array(y_predict)
+        # print("[*] --- y_predict: ", y_predict)
+        return y_predict
 
     def _predict(self, X, theta):
         Y_predict = self._return_score(X)
-        predictions = (Y_predict > theta).astype(int)
+        predictions = np.where(Y_predict > theta, 1, 0)
         return predictions
     
     def _predict_holdout(self):
@@ -495,6 +499,7 @@ class Model():
 
     def mu_hat_calc(self):
 
+        print("[*] - Computing gamma_roi and beta_roi in the holdout set (nominal)")
         X_holdout = self.holdout['data'].copy()
         X_holdout['weights'] = self.holdout['weights'].copy()
         X_holdout['labels'] = self.holdout['labels'].copy()
@@ -510,6 +515,7 @@ class Model():
         X_holdout_sc = self.scaler.transform(holdout_post)
 
         holdout_score = self._return_score(X_holdout_sc)
+        print(holdout_score)
 
         weights_holdout_signal= weights_holdout[label_holdout == 1]
         weights_holdout_bkg = weights_holdout[label_holdout == 0]
@@ -523,7 +529,7 @@ class Model():
 
         self.beta_roi = (weights_holdout_bkg[score_holdout_bkg > self.threshold]).sum()
 
-
+        print(f"gamma_roi = {self.gamma_roi} \n beta_roi = {self.beta_roi}")
 
     def amsasimov_x(self, s, b):
         '''
@@ -599,6 +605,7 @@ class Model():
         X_holdout_sc = self.scaler.transform(holdout_post)
 
         holdout_score = self._return_score(X_holdout_sc)
+        print(holdout_score)
 
         weights_holdout_signal= weights_holdout[label_holdout == 1]
         weights_holdout_bkg = weights_holdout[label_holdout == 0]
@@ -612,6 +619,8 @@ class Model():
 
         b = (weights_holdout_bkg[score_holdout_bkg > self.threshold]).sum()
 
+
+        print(f"s = {s} \n b = {b}")
         return s, b
 
     def _theta_plot(self):
