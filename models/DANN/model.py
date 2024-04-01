@@ -218,7 +218,7 @@ class Model():
         self.input_dim = self.train_set["data"].shape[1]
 
         n_hidden_inv = 4; n_hidden_inv_R = 4
-        n_nodes_inv = 4; n_nodes_inv_R = 4
+        n_nodes_inv = 100; n_nodes_inv_R = 100
         hp_lambda = 50
 
         inputs = Input(shape=(self.input_dim,))
