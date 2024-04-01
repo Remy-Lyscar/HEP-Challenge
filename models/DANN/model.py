@@ -474,8 +474,7 @@ class Model():
         self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=1, batch_size=2*1024, verbose=1)
 
     def _return_score(self, X):
-        y_predict = self.model.predict(X)
-        # y_predict = y_predict.pop(0)
+        y_predict = np.array(self.model.predict(X))
         y_predict = y_predict.ravel()
         # print("[*] --- y_predict: ", y_predict)
         return y_predict
@@ -690,6 +689,8 @@ class Model():
 
         plt.savefig(plot_file_b)
         plt.close(fig_b) # So the figure is not diplayed 
+
+        print("[*] - Plots saved")
         
 
         # del self.holdout
@@ -746,7 +747,7 @@ class Model():
 
     def _save_model(self):
 
-
+        print("[*] - Saving Model")
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")   
