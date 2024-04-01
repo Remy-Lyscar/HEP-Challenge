@@ -660,7 +660,7 @@ class Model():
         plt.xlabel('theta')
         plt.ylabel('events')
         plt.legend(loc = 'lower right')
-        plt.text(0.5, 0.0, f"standard deviation: sigma = {sigma_s:.8f}", ha='center', va='center', transform=fig_s.transFigure) 
+        plt.text(0.5, 0.1, f"standard deviation: sigma = {sigma_s:.8f}", ha='center', va='center', transform=fig_s.transFigure) 
         hep.atlas.text(loc=1, text = " ")
 
         # plot file location on Atlas1 (same as local, but I can use linux functionalities for paths)
@@ -681,7 +681,7 @@ class Model():
         plt.xlabel('theta')
         plt.ylabel('events')
         plt.legend(loc = 'lower right')
-        plt.text(0.5, 0.0, f"standard deviation: sigma = {sigma_b:.8f}", ha='center', va='center', transform=fig_b.transFigure)
+        plt.text(0.5, 0.1, f"standard deviation: sigma = {sigma_b:.8f}", ha='center', va='center', transform=fig_b.transFigure)
         hep.atlas.text(loc=1, text = " ")
 
         # plot file location on Atlas1 (same as local, but I can use linux functionalities for paths)
