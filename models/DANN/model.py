@@ -475,7 +475,8 @@ class Model():
 
     def _return_score(self, X):
         y_predict = np.array(self.model.predict(X))
-        y_predict = y_predict.ravel()
+        print(y_predict)
+        # y_predict = y_predict.ravel()
         # print("[*] --- y_predict: ", y_predict)
         return y_predict
 
