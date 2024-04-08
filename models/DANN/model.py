@@ -11,6 +11,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import json
 import pickle
+from datetime import datetime as dt
 
 import mplhep as hep
 
@@ -147,6 +148,7 @@ class Model():
         # self._validate()
         # self._compute_validation_result()
         self._theta_plot()
+        self.optimization_plots()
         self._save_model()
 
     def predict(self, test_set):
@@ -372,6 +374,8 @@ class Model():
 
     def _train(self):
 
+        t1 = dt.now()
+
         tes_sets = []
         tes_set = self.train_set['data'].copy()
 
@@ -468,10 +472,15 @@ class Model():
         
         del self.train_set['data']
 
+        t2 = dt.now()
+        self.training_time = t2 - t1
+        print("[*] --- Model Trained\n")
+        print(f"Training time: {self.training_time}")
+
 
     def _fit(self, X, Y, Z, w):
         print("[*] --- Fitting Model")
-        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=2, batch_size=2*1024, verbose=1)
+        self.model.fit(x=X, y=[Y,Z], sample_weight=w, epochs=4, batch_size=2*1024, verbose=1)
 
     def _return_score(self, X):
         y_predict = self.model.predict(X)
@@ -583,7 +592,7 @@ class Model():
 
 
 
-    def nominal(self, theta):
+    def nominal(self, theta, threshold):
         """
         Params: theta (the systematics) 
 
@@ -616,11 +625,11 @@ class Model():
         score_holdout_signal = holdout_score[label_holdout == 1]
         score_holdout_bkg = holdout_score[label_holdout == 0]
 
-        s = (weights_holdout_signal[score_holdout_signal > self.threshold]).sum()
+        s = (weights_holdout_signal[score_holdout_signal > threshold]).sum()
         if s == 0:
             s = EPSILON
 
-        b = (weights_holdout_bkg[score_holdout_bkg > self.threshold]).sum()
+        b = (weights_holdout_bkg[score_holdout_bkg > threshold]).sum()
 
 
         print(f"s = {s} \n b = {b}")
@@ -646,7 +655,7 @@ class Model():
         b_list = []
         
         for theta in tqdm(theta_list):
-            s , b = self.nominal(theta)
+            s , b = self.nominal(theta, self.threshold)
             s_list.append(s)
             b_list.append(b)
             # print(f"[*] --- s: {s}")
@@ -696,7 +705,9 @@ class Model():
 
         print("[*] - Plots saved")
         
-
+        self.s_list = s_list
+        self.b_list = b_list
+        self.theta_list = theta_list
         # del self.holdout
 
     def _validate(self):
@@ -749,6 +760,128 @@ class Model():
         print(f"[*] --- validation delta_mu_hat (avg): {np.round(np.mean(self.validation_delta_mu_hats), 4)}")
         # del self.validation_sets
 
+
+
+
+    def optimization_plots(self):
+
+        t1 = dt.now()
+
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_dir)
+
+        # Plot: significance depending on threshold 
+        threshold_list = np.linspace(0, 1, 20)  # 0.05 step between each threshold
+
+        self.s_list_threshold = []
+        self.b_list_threshold = []
+        self.Z_list_threshold = []
+        self.del_list_threshold = []
+
+        thetas = [0.97, 1, 1.03]
+        for i in range(len(thetas)):
+
+            Z_list = []
+            del_mu_stat_list = []
+            s_list = []
+            b_list = []
+
+            for threshold in tqdm(threshold_list):
+                
+                s, b = nominal(thetas[i], threshold)
+                s_list.append(s)
+                b_list.append(b)
+    
+                Z_list.append(amsasimov_x(s, b))
+                del_mu_stat_list.append(del_mu_stat(s, b))
+
+            fig_s_threshold = plt.figure()
+            plt.plot(threshold_list, s_list, 'b.', label = 's')
+            plt.xlabel('threshold')
+            plt.ylabel('events')
+            plt.legend(loc = 'lower right')
+            plt.title(f"TES = {thetas[i]}")
+            hep.atlas.text(loc=1, text = " ")
+
+            save_path_s_threshold = os.path.join(parent_dir, "DANN_saved")
+            plot_file_s_theshold = os.path.join(save_path_s_threshold, f"DANN_s_threshold_TES={thetas[i]}.png")
+
+            if not os.path.exists(save_path_s_threshold):
+                os.makedirs(save_path_s_threshold)
+
+            plt.savefig(plot_file_s_theshold)
+            plt.close(fig_s_threshold) 
+
+            
+
+            fig_b_threshold = plt.figure()
+            plt.plot(threshold_list, b_list, 'b.', label = 'b')
+            plt.xlabel('threshold')
+            plt.ylabel('events')
+            plt.legend(loc = 'lower right')
+            plt.title(f"TES = {thetas[i]}")
+            hep.atlas.text(loc=1, text = " ")
+
+            save_path_b_threshold = os.path.join(parent_dir, "DANN_saved")
+            plot_file_b_theshold = os.path.join(save_path_b_threshold, f"DANN_b_threshold_TES={thetas[i]}.png")
+
+            if not os.path.exists(save_path_b_threshold):
+                os.makedirs(save_path_b_threshold)
+
+            plt.savefig(plot_file_b_theshold)
+            plt.close(fig_b_threshold) 
+
+
+            fig_Z_threshold = plt.figure()
+            plt.plot(threshold_list, Z_list, 'b.')
+            plt.xlabel('threshold')
+            plt.ylabel('Significance')
+            # plt.legend(loc = 'lower right')
+            plt.title(f"TES = {thetas[i]}")
+            hep.atlas.text(loc=1, text = " ")
+
+            save_path_Z_threshold = os.path.join(parent_dir, "DANN_saved")
+            plot_file_Z_theshold = os.path.join(save_path_Z_threshold, f"DANN_Z_threshold_TES={thetas[i]}.png")
+
+            if not os.path.exists(save_path_Z_threshold):
+                os.makedirs(save_path_Z_threshold)
+
+            plt.savefig(plot_file_Z_theshold)
+            plt.close(fig_Z_threshold)
+
+
+
+            fig_del_threshold = plt.figure()
+            plt.plot(threshold_list, del_mu_stat_list, 'b.')
+            plt.xlabel('threshold')
+            plt.ylabel('delta_mu_stat')
+            # plt.legend(loc = 'lower right')
+            plt.title(f"TES = {thetas[i]}")
+            hep.atlas.text(loc=1, text = " ")
+
+            save_path_del_threshold = os.path.join(parent_dir, "DANN_saved")
+            plot_file_del_theshold = os.path.join(save_path_del_threshold, f"DANN_del_threshold_TES={thetas[i]}.png")
+
+            if not os.path.exists(save_path_del_threshold):
+                os.makedirs(save_path_del_threshold)
+
+            plt.savefig(plot_file_del_theshold)
+            plt.close(fig_del_threshold)
+
+            self.s_list_threshold.append(s_list)
+            self.b_list_threshold.append(b_list)
+            self.Z_list_threshold.append(Z_list)
+            self.del_list_threshold.append(del_mu_stat_list)
+        
+
+
+
+        t2 = dt.now()
+        self.plot_time = t2 -t1
+        print("[*] Plots saved\n")
+        print(f"Plotting time: {self.plot_time}")
+
+
     def _save_model(self):
 
         print("[*] - Saving Model")
@@ -758,6 +891,8 @@ class Model():
         model_path = os.path.join(model_dir, "model.h5")
         settings_path = os.path.join(model_dir, "settings.pkl")
         scaler_path = os.path.join(model_dir, "scaler.pkl")
+        df_path = os.path.join(model_dir, "some_results.csv")
+
 
         print("[*] Saving Model")
         print(f"[*] --- model path: {model_path}")
@@ -782,4 +917,34 @@ class Model():
 
         pickle.dump(self.scaler, open(scaler_path, "wb"))
 
+
+        # Other informations useful for making plots and comparisons afterwards
+        df_results = pd.DataFrame(
+            {
+                "theta_list" : self.theta_list, 
+                "s_list" : self.s_list, 
+                "b_list" : self.b_list,
+                "threshold_list" : self.threshold_list,
+                "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
+                "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
+                "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
+                "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
+                "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
+                "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
+                "b events regarding threshold for TES = 1": self.b_list_threshold[1],
+                "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
+                "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
+                "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
+                "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
+                "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
+            }
+        )
+
+
+        df_results.to_csv(df_path, index=False, sep="\t", encoding='utf-8')
+
+
         print("[*] - Model saved")
+
+        
+
