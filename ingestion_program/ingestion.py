@@ -304,13 +304,13 @@ if __name__ == '__main__':
     ingestion.fit_submission()
 
     # load test set
-    ingestion.load_test_set()
+    # ingestion.load_test_set()
 
     # predict submission
-    ingestion.predict_submission()
+    # ingestion.predict_submission()
 
     # save result
-    ingestion.save_result()
+    # ingestion.save_result()
 
     # Stop timer
     ingestion.stop_timer()
