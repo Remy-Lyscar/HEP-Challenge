@@ -788,12 +788,12 @@ class Model():
 
             for threshold in tqdm(threshold_list):
                 
-                s, b = nominal(thetas[i], threshold)
+                s, b = self.nominal(thetas[i], threshold)
                 s_list.append(s)
                 b_list.append(b)
     
-                Z_list.append(amsasimov_x(s, b))
-                del_mu_stat_list.append(del_mu_stat(s, b))
+                Z_list.append(self.amsasimov_x(s, b))
+                del_mu_stat_list.append(self.del_mu_stat(s, b))
 
             fig_s_threshold = plt.figure()
             plt.plot(threshold_list, s_list, 'b.', label = 's')
