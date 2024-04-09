@@ -868,6 +868,8 @@ class Model():
             plt.savefig(plot_file_del_theshold)
             plt.close(fig_del_threshold)
 
+
+            self.threshold_list = threshold_list
             self.s_list_threshold.append(s_list)
             self.b_list_threshold.append(b_list)
             self.Z_list_threshold.append(Z_list)
