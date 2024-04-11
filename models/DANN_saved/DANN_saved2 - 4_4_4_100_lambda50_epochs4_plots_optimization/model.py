@@ -137,12 +137,12 @@ class Model():
         Y_hat_test = self._return_score(test_df)
 
         print("[*] - Computing Test result")
-        # weights_train = self.train_set["weights"].copy()
+        weights_train = self.train_set["weights"].copy()
         weights_test = test_set["weights"].copy()
 
         print(f"[*] --- total weight test: {weights_test.sum()}") 
-        # print(f"[*] --- total weight train: {weights_train.sum()}")
-        # print(f"[*] --- total weight mu_cals_set: {self.holdout['weights'].sum()}")
+        print(f"[*] --- total weight train: {weights_train.sum()}")
+        print(f"[*] --- total weight mu_cals_set: {self.holdout['weights'].sum()}")
 
         weight_clean = weights_test[Y_hat_test > self.threshold]
         test_df = test_set['data'][Y_hat_test > self.threshold]
