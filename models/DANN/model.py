@@ -330,6 +330,25 @@ class Model():
                 "labels": holdout_labels,
                 "weights": holdout_weights
             }
+        
+
+        print("[*] Saving holdout set")
+        df_holdout  = pd.DataFrame(
+            self.holdout
+        )
+        
+
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        parent_dir = os.path.dirname(current_dir)
+        model_dir = os.path.join(parent_dir, "DANN_saved")  
+        df_path_holdout = os.path.join(model_dir, "holdout.csv")
+
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+
+        df_holdout.to_csv(df_path_holdout,index=False, sep="\t", encoding='utf-8' )
+
+        print("[*] Holdout saved")
 
         self.validation_sets = []
         for i in range(10):
@@ -772,6 +791,7 @@ class Model():
 
         # Plot: significance depending on threshold 
         threshold_list = np.linspace(0, 1, 20)  # 0.05 step between each threshold
+        self.threshold_list = threshold_list
 
         self.s_list_threshold = []
         self.b_list_threshold = []
@@ -869,7 +889,7 @@ class Model():
             plt.close(fig_del_threshold)
 
 
-            self.threshold_list = threshold_list
+            
             self.s_list_threshold.append(s_list)
             self.b_list_threshold.append(b_list)
             self.Z_list_threshold.append(Z_list)
@@ -893,7 +913,8 @@ class Model():
         model_path = os.path.join(model_dir, "model.h5")
         settings_path = os.path.join(model_dir, "settings.pkl")
         scaler_path = os.path.join(model_dir, "scaler.pkl")
-        df_path = os.path.join(model_dir, "some_results.csv")
+        df_path_events = os.path.join(model_dir, "events.csv")
+        df_path_threshold = os.path.join(model_dir, "threshold.csv")
 
 
         print("[*] Saving Model")
@@ -921,12 +942,17 @@ class Model():
 
 
         # Other informations useful for making plots and comparisons afterwards
-        df_results = pd.DataFrame(
+
+        df_events = pd.DataFrame(
             {
                 "theta_list" : self.theta_list, 
                 "s_list" : self.s_list, 
                 "b_list" : self.b_list,
-                "threshold_list" : self.threshold_list,
+            }
+        )
+
+        df_threshold = pd.DataFrame(
+            {
                 "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
                 "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
                 "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
@@ -942,9 +968,8 @@ class Model():
             }
         )
 
-
-        df_results.to_csv(df_path, index=False, sep="\t", encoding='utf-8')
-
+        df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
+        df_threshold.to_csv(df_path_threshold, index=False, sep="\t", encoding='utf-8')
 
         print("[*] - Model saved")
 
