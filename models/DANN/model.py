@@ -334,19 +334,27 @@ class Model():
 
         print("[*] Saving holdout set")
         df_holdout  = pd.DataFrame(
-            self.holdout
+            holdout_df
         )
+
+        df_labels = pd.DataFrame(holdout_labels)
+        df_weights = pd.DataFrame(holdout_labels)
         
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
         df_path_holdout = os.path.join(model_dir, "holdout.csv")
+        df_path_labels = os.path.join(model_dir, "holdout_labels.csv")
+        df_path_weights = os.path.join(model_dir, "holdout_weights.csv")
+
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
 
         df_holdout.to_csv(df_path_holdout,index=False, sep="\t", encoding='utf-8' )
+        df_labels.to_csv(df_path_labels,index=False, sep="\t", encoding='utf-8' )
+        df_weights.to_csv(df_path_weights,index=False, sep="\t", encoding='utf-8' )
 
         print("[*] Holdout saved")
 
