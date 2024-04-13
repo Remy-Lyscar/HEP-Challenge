@@ -8,3 +8,7 @@ public_data.zip
 
 input_data
 reference_data
+
+models/DANN_saved/holdout.csv
+models/DANN_saved/holdout_labels.csv
+models/DANN_saved/holdout_weights.csv
