@@ -580,7 +580,7 @@ class Model():
 
 
 
-    def nominal(self, theta):
+    def nominal(self, theta, threshold):
         """
         Params: theta (the systematics) 
 
@@ -613,11 +613,11 @@ class Model():
         score_holdout_signal = holdout_score[label_holdout == 1]
         score_holdout_bkg = holdout_score[label_holdout == 0]
 
-        s = (weights_holdout_signal[score_holdout_signal > self.threshold]).sum()
+        s = (weights_holdout_signal[score_holdout_signal > threshold]).sum()
         if s == 0:
             s = EPSILON
 
-        b = (weights_holdout_bkg[score_holdout_bkg > self.threshold]).sum()
+        b = (weights_holdout_bkg[score_holdout_bkg > threshold]).sum()
 
         return s, b
 
@@ -675,7 +675,7 @@ class Model():
         b_list = []
         
         for theta in theta_list:
-            s , b = self.nominal(theta)
+            s , b = self.nominal(theta, self.threshold)
             s_list.append(s)
             b_list.append(b)
             # print(f"[*] --- s: {s}")
@@ -721,6 +721,10 @@ class Model():
 
         # del self.mu_calc_set
 
+        self.s_list = s_list
+        self.b_list = b_list
+        self.theta_list = theta_list
+
 
     def _save_model(self):
 
@@ -731,6 +735,8 @@ class Model():
         model_path = os.path.join(model_dir, "model.h5")
         settings_path = os.path.join(model_dir, "settings.pkl")
         scaler_path = os.path.join(model_dir, "scaler.pkl")
+        df_path_events = os.path.join(model_dir, "events.csv")
+        df_path_threshold = os.path.join(model_dir, "threshold.csv")
 
 
         print("[*] Saving Model")
@@ -755,5 +761,15 @@ class Model():
         pickle.dump(settings, open(settings_path, "wb"))
 
         pickle.dump(self.scaler, open(scaler_path, "wb"))
+
+        df_events = pd.DataFrame(
+            {
+                "theta_list" : self.theta_list, 
+                "s_list" : self.s_list, 
+                "b_list" : self.b_list,
+            }
+        )
+
+        df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
 
         print("[*] - Model saved")
