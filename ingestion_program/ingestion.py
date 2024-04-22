@@ -295,7 +295,7 @@ if __name__ == '__main__':
     ingestion.start_timer()
 
     # load train set
-    # ingestion.load_train_set()
+    ingestion.load_train_set()
 
     # initialize submission
     ingestion.init_submission()
