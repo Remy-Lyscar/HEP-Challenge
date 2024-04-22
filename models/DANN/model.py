@@ -120,7 +120,7 @@ class Model():
         # Intialize class variables
         self.validation_sets = None
         self.threshold_candidates = np.arange(0.4, 0.95, 0.02)
-        self.threshold = 0.7
+        self.threshold = 0.9
         self.bins = 1
         self.scaler = StandardScaler()
         self.mu_scan = np.linspace(0, 4, 100)   
