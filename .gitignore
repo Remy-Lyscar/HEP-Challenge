@@ -12,3 +12,8 @@ reference_data
 models/DANN_saved/holdout.csv
 models/DANN_saved/holdout_labels.csv
 models/DANN_saved/holdout_weights.csv
+
+
+models/DANN_saved/holdout.pkl
+models/DANN_saved/holdout_labels.pkl
+models/DANN_saved/holdout_weights.pkl

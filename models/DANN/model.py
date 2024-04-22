@@ -144,7 +144,7 @@ class Model():
         self._init_model()
         self._train()
         # self._predict_holdout()
-        self.mu_hat_calc()
+        # self.mu_hat_calc()
         # self._validate()
         # self._compute_validation_result()
         self._theta_plot()
@@ -338,23 +338,29 @@ class Model():
         )
 
         df_labels = pd.DataFrame(holdout_labels)
-        df_weights = pd.DataFrame(holdout_labels)
+        df_weights = pd.DataFrame(holdout_weights)
         
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_holdout = os.path.join(model_dir, "holdout.csv")
-        df_path_labels = os.path.join(model_dir, "holdout_labels.csv")
-        df_path_weights = os.path.join(model_dir, "holdout_weights.csv")
+        df_path_holdout = os.path.join(model_dir, "holdout.pkl")
+        df_path_labels = os.path.join(model_dir, "holdout_labels.pkl")
+        df_path_weights = os.path.join(model_dir, "holdout_weights.pkl")
 
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
 
-        df_holdout.to_csv(df_path_holdout,index=False, sep="\t", encoding='utf-8' )
-        df_labels.to_csv(df_path_labels,index=False, sep="\t", encoding='utf-8' )
-        df_weights.to_csv(df_path_weights,index=False, sep="\t", encoding='utf-8' )
+        # df_holdout.to_csv(df_path_holdout,index=False, sep="\t", encoding='utf-8' )
+        # df_labels.to_csv(df_path_labels,index=False, sep="\t", encoding='utf-8' )
+        # df_weights.to_csv(df_path_weights,index=False, sep="\t", encoding='utf-8' )
+
+
+        pickle.dump(df_holdout, open(df_path_holdout, "wb"))
+        pickle.dump(df_labels, open(df_path_labels, "wb"))
+        pickle.dump(df_weights, open(df_path_weights, "wb"))
+
 
         print("[*] Holdout saved")
 
@@ -798,7 +804,7 @@ class Model():
         parent_dir = os.path.dirname(current_dir)
 
         # Plot: significance depending on threshold 
-        threshold_list = np.linspace(0, 1, 20)  # 0.05 step between each threshold
+        threshold_list = np.linspace(0.85, 0.95, 20) 
         self.threshold_list = threshold_list
 
         self.s_list_threshold = []
@@ -823,41 +829,41 @@ class Model():
                 Z_list.append(self.amsasimov_x(s, b))
                 del_mu_stat_list.append(self.del_mu_stat(s, b))
 
-            fig_s_threshold = plt.figure()
-            plt.plot(threshold_list, s_list, 'b.', label = 's')
-            plt.xlabel('threshold')
-            plt.ylabel('events')
-            plt.legend(loc = 'lower right')
-            plt.title(f"TES = {thetas[i]}")
-            hep.atlas.text(loc=1, text = " ")
+            # fig_s_threshold = plt.figure()
+            # plt.plot(threshold_list, s_list, 'b.', label = 's')
+            # plt.xlabel('threshold')
+            # plt.ylabel('events')
+            # plt.legend(loc = 'lower right')
+            # plt.title(f"TES = {thetas[i]}")
+            # hep.atlas.text(loc=1, text = " ")
 
-            save_path_s_threshold = os.path.join(parent_dir, "DANN_saved")
-            plot_file_s_theshold = os.path.join(save_path_s_threshold, f"DANN_s_threshold_TES={thetas[i]}.png")
+            # save_path_s_threshold = os.path.join(parent_dir, "DANN_saved")
+            # plot_file_s_theshold = os.path.join(save_path_s_threshold, f"DANN_s_threshold_TES={thetas[i]}.png")
 
-            if not os.path.exists(save_path_s_threshold):
-                os.makedirs(save_path_s_threshold)
+            # if not os.path.exists(save_path_s_threshold):
+            #     os.makedirs(save_path_s_threshold)
 
-            plt.savefig(plot_file_s_theshold)
-            plt.close(fig_s_threshold) 
+            # plt.savefig(plot_file_s_theshold)
+            # plt.close(fig_s_threshold) 
 
             
 
-            fig_b_threshold = plt.figure()
-            plt.plot(threshold_list, b_list, 'b.', label = 'b')
-            plt.xlabel('threshold')
-            plt.ylabel('events')
-            plt.legend(loc = 'lower right')
-            plt.title(f"TES = {thetas[i]}")
-            hep.atlas.text(loc=1, text = " ")
+            # fig_b_threshold = plt.figure()
+            # plt.plot(threshold_list, b_list, 'b.', label = 'b')
+            # plt.xlabel('threshold')
+            # plt.ylabel('events')
+            # plt.legend(loc = 'lower right')
+            # plt.title(f"TES = {thetas[i]}")
+            # hep.atlas.text(loc=1, text = " ")
 
-            save_path_b_threshold = os.path.join(parent_dir, "DANN_saved")
-            plot_file_b_theshold = os.path.join(save_path_b_threshold, f"DANN_b_threshold_TES={thetas[i]}.png")
+            # save_path_b_threshold = os.path.join(parent_dir, "DANN_saved")
+            # plot_file_b_theshold = os.path.join(save_path_b_threshold, f"DANN_b_threshold_TES={thetas[i]}.png")
 
-            if not os.path.exists(save_path_b_threshold):
-                os.makedirs(save_path_b_threshold)
+            # if not os.path.exists(save_path_b_threshold):
+            #     os.makedirs(save_path_b_threshold)
 
-            plt.savefig(plot_file_b_theshold)
-            plt.close(fig_b_threshold) 
+            # plt.savefig(plot_file_b_theshold)
+            # plt.close(fig_b_threshold) 
 
 
             fig_Z_threshold = plt.figure()
@@ -879,22 +885,22 @@ class Model():
 
 
 
-            fig_del_threshold = plt.figure()
-            plt.plot(threshold_list, del_mu_stat_list, 'b.')
-            plt.xlabel('threshold')
-            plt.ylabel('delta_mu_stat')
-            # plt.legend(loc = 'lower right')
-            plt.title(f"TES = {thetas[i]}")
-            hep.atlas.text(loc=1, text = " ")
+            # fig_del_threshold = plt.figure()
+            # plt.plot(threshold_list, del_mu_stat_list, 'b.')
+            # plt.xlabel('threshold')
+            # plt.ylabel('delta_mu_stat')
+            # # plt.legend(loc = 'lower right')
+            # plt.title(f"TES = {thetas[i]}")
+            # hep.atlas.text(loc=1, text = " ")
 
-            save_path_del_threshold = os.path.join(parent_dir, "DANN_saved")
-            plot_file_del_theshold = os.path.join(save_path_del_threshold, f"DANN_del_threshold_TES={thetas[i]}.png")
+            # save_path_del_threshold = os.path.join(parent_dir, "DANN_saved")
+            # plot_file_del_theshold = os.path.join(save_path_del_threshold, f"DANN_del_threshold_TES={thetas[i]}.png")
 
-            if not os.path.exists(save_path_del_threshold):
-                os.makedirs(save_path_del_threshold)
+            # if not os.path.exists(save_path_del_threshold):
+            #     os.makedirs(save_path_del_threshold)
 
-            plt.savefig(plot_file_del_theshold)
-            plt.close(fig_del_threshold)
+            # plt.savefig(plot_file_del_theshold)
+            # plt.close(fig_del_threshold)
 
 
             
@@ -921,8 +927,8 @@ class Model():
         model_path = os.path.join(model_dir, "model.h5")
         settings_path = os.path.join(model_dir, "settings.pkl")
         scaler_path = os.path.join(model_dir, "scaler.pkl")
-        df_path_events = os.path.join(model_dir, "events.csv")
-        df_path_threshold = os.path.join(model_dir, "threshold.csv")
+        df_path_events = os.path.join(model_dir, "events.pkl")
+        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
 
 
         print("[*] Saving Model")
@@ -959,25 +965,29 @@ class Model():
             }
         )
 
+        pickle.dump(df_events, open(df_path_events, "wb"))
+
         df_threshold = pd.DataFrame(
             {
                 "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
                 "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
                 "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
-                "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
-                "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
-                "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
-                "b events regarding threshold for TES = 1": self.b_list_threshold[1],
-                "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
-                "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
-                "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
-                "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
-                "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
+                # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
+                # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
+                # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
+                # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
+                # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
+                # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
+                # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
+                # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
+                # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
             }
         )
 
-        df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
-        df_threshold.to_csv(df_path_threshold, index=False, sep="\t", encoding='utf-8')
+        pickle.dump(df_threshold, open(df_path_threshold, "wb"))
+
+        # df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
+        # df_threshold.to_csv(df_path_threshold, index=False, sep="\t", encoding='utf-8')
 
         print("[*] - Model saved")
 
