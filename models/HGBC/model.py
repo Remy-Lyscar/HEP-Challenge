@@ -114,7 +114,7 @@ class Model():
         self.mu_hat_calc()
         # self._validate()
         # self._compute_validation_result()
-        # self._theta_plot()
+        self._theta_plot()
         self.optimization_plots()
         self._save_model()
 
