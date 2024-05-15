@@ -807,7 +807,7 @@ class Model():
             plt.title(f"TES = {thetas[i]}")
             hep.atlas.text(loc=1, text = " ")
 
-            save_path_Z_threshold = os.path.join(parent_dir, "DANN_saved")
+            save_path_Z_threshold = os.path.join(parent_dir, "HGBC_saved")
             plot_file_Z_theshold = os.path.join(save_path_Z_threshold, f"DANN_Z_threshold_TES={thetas[i]}.png")
 
             if not os.path.exists(save_path_Z_threshold):
@@ -826,7 +826,7 @@ class Model():
             # plt.title(f"TES = {thetas[i]}")
             # hep.atlas.text(loc=1, text = " ")
 
-            # save_path_del_threshold = os.path.join(parent_dir, "DANN_saved")
+            # save_path_del_threshold = os.path.join(parent_dir, "HGBC_saved")
             # plot_file_del_theshold = os.path.join(save_path_del_threshold, f"DANN_del_threshold_TES={thetas[i]}.png")
 
             # if not os.path.exists(save_path_del_threshold):
