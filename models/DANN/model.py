@@ -147,9 +147,9 @@ class Model():
         # self.mu_hat_calc()
         # self._validate()
         # self._compute_validation_result()
-        self._theta_plot()
+        # self._theta_plot()
         self.optimization_plots()
-        self._save_model()
+        # self._save_model()
 
     def predict(self, test_set):
         """
@@ -800,8 +800,15 @@ class Model():
 
         t1 = dt.now()
 
+
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
+        model_dir = os.path.join(parent_dir, "DANN_saved")  
+        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
+
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+
 
         # Plot: significance depending on threshold 
         threshold_list = np.linspace(0.85, 0.95, 20) 
@@ -910,6 +917,25 @@ class Model():
             self.del_list_threshold.append(del_mu_stat_list)
         
 
+
+        df_threshold = pd.DataFrame(
+            {
+                "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
+                "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
+                "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
+                # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
+                # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
+                # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
+                # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
+                # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
+                # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
+                # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
+                # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
+                # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
+            }
+        )
+
+        pickle.dump(df_threshold, open(df_path_threshold, "wb"))
 
 
         t2 = dt.now()
