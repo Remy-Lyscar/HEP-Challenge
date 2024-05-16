@@ -91,7 +91,7 @@ class Model():
         # Intialize class variables
         self.validation_sets = None
         # self.threshold_candidates = np.arange(0.5, 0.99, 0.01)
-        self.threshold = 0.952
+        self.threshold = 0.945
         self.scaler = StandardScaler()
         self.scaler_tes = StandardScaler()
 
