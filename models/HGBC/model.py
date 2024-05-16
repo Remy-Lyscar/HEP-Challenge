@@ -90,8 +90,8 @@ class Model():
 
         # Intialize class variables
         self.validation_sets = None
-        self.threshold_candidates = np.arange(0.5, 0.99, 0.01)
-        self.threshold = 0.85
+        # self.threshold_candidates = np.arange(0.5, 0.99, 0.01)
+        self.threshold = 0.952
         self.scaler = StandardScaler()
         self.scaler_tes = StandardScaler()
 
@@ -115,7 +115,7 @@ class Model():
         # self._validate()
         # self._compute_validation_result()
         self._theta_plot()
-        self.optimization_plots()
+        # self.optimization_plots()
         self._save_model()
 
     def predict(self, test_set):
@@ -673,7 +673,7 @@ class Model():
         parent_dir = os.path.dirname(current_dir)
 
         
-        theta_list = np.linspace(0.9,1.1,10)
+        theta_list = np.linspace(0.9,1.1,20)
         s_list = []
         b_list = []
         
@@ -895,26 +895,26 @@ class Model():
             }
         )
 
-        df_threshold = pd.DataFrame(
-            {
-                "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
-                "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
-                "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
-                # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
-                # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
-                # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
-                # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
-                # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
-                # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
-                # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
-                # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
-                # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
-            }
-        )
+        # df_threshold = pd.DataFrame(
+        #     {
+        #         "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
+        #         "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
+        #         "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
+        #         # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
+        #         # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
+        #         # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
+        #         # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
+        #         # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
+        #         # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
+        #         # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
+        #         # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
+        #         # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
+        #     }
+        # )
 
 
         pickle.dump(df_events, open(df_path_events, "wb"))
-        pickle.dump(df_threshold, open(df_path_threshold, "wb"))
+        # pickle.dump(df_threshold, open(df_path_threshold, "wb"))
         
 
         # df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
