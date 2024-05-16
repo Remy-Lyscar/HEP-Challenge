@@ -6,6 +6,8 @@ import numpy as np
 import time
 from datetime import datetime as dt 
 import mplhep as hep
+import pickle 
+import json
 hep.set_style("ATLAS")
 
 
@@ -27,24 +29,53 @@ hep.set_style("ATLAS")
 
 
 
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# events_dir = os.path.join(current_dir, "DANN_saved3 - 4_4_4_100_lambda50_epochs4_plots_optimization")
-# events_path = os.path.join(events_dir, "events.csv")
+# 2- Zmax (do some plots in the region close to the best threshold to be more precise)
 
-# df_events = pd.read_csv(events_path)
-# print(df_events.values)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+data_file = os.path.join(current_dir, "threshold.pkl")
 
 
-# with open(events_path, "r") as f:
-#     data = list(csv.reader(f, delimiter="\t"))
+threshold_data = pickle.load(open(data_file, "rb"))
 
-# data = np.array(data)
-# data = data[1:]
+threshold_list = threshold_list = np.linspace(0.85, 0.95, 20)
+Z_list = threshold_data["significance regarding threshold for TES = 0.97"]
 
-# theta_list = [data[i][0] for i in range(len(data))]
-# print(theta_list)
-# s_list = [data[i][1] for i in range(len(data))]
-# print(theta_list)
-# b_list = [data[i][2] for i in range(len(data))]
-# print(theta_list)
-# print(data)
+def annot_max(x,y, ax=None):
+    xmax = x[np.argmax(y)]
+    ymax = y.max()
+    text= "threshold={:.3f}, Z_max={:.3f}".format(xmax, ymax)
+    if not ax:
+        ax=plt.gca()
+    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+    # arrowprops=dict(arrowstyle="->",connectionstyle="angle,angleA=0,angleB=60")
+    # kw = dict(xycoords='data',textcoords="axes fraction",
+    #           arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
+    kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha="right", va="top")
+    ax.annotate(text, xy=(xmax, ymax), xytext=(0.5,0.1), **kw)
+    
+    x_bounds = ax.get_xbound()
+    y_bounds = ax.get_ybound()
+    ax.set_xlim(x_bounds[0], x_bounds[1])
+    ax.set_ylim(y_bounds[0], y_bounds[1])
+    plt.vlines(xmax, y_bounds[0], ymax, colors = 'r', linestyles='dashed')
+    plt.hlines(ymax, x_bounds[0] ,xmax, colors='r', linestyles='dashed')
+
+
+
+
+fig_Z_threshold = plt.figure()
+plt.plot(threshold_list, Z_list, 'b.')
+plt.xlabel('threshold')
+plt.ylabel('Significance')
+# plt.legend(loc = 'lower right')
+plt.title(f"TES = 0.97")
+hep.atlas.text(loc=1, text = " ")
+
+annot_max(threshold_list, Z_list)
+
+
+plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=0.97.png")
+
+
+plt.savefig(plot_file_Z_theshold)
+plt.close(fig_Z_threshold)

@@ -57,16 +57,6 @@ hep.atlas.text(loc=1, text = " ")
 
 annot_max(threshold_list, Z_list)
 
-# xmax = threshold_list[np.argmax(Z_list)]
-# ymax = Z_list.max()
-# ax = plt.gca()
-# x_bounds = ax.get_xbound()
-# y_bounds = ax.get_ybound()
-# ax.set_xlim(x_bounds[0], x_bounds[1])
-# ax.set_ylim(y_bounds[0], y_bounds[1])
-# plt.vlines(xmax, y_bounds[0], ymax, colors = 'r', linestyles='dashed')
-# plt.hlines(ymax, x_bounds[0] ,xmax, colors='r', linestyles='dashed')
-
 
 plot_file_Z_theshold = os.path.join(current_dir, "HGBC_Z_threshold_TES=1.03.png")
 
