@@ -203,7 +203,7 @@ class Model():
             self.train_set["data"], 
             self.train_set["labels"],
             self.train_set["weights"],
-            test_size=0.05,
+            test_size=0.2,
             stratify=self.train_set["labels"]
         )
 

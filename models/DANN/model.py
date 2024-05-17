@@ -650,7 +650,7 @@ class Model():
         X_holdout_sc = self.scaler.transform(holdout_post)
 
         holdout_score = self._return_score(X_holdout_sc)
-        print(holdout_score)
+        # print(holdout_score)
 
         weights_holdout_signal= weights_holdout[label_holdout == 1]
         weights_holdout_bkg = weights_holdout[label_holdout == 0]
