@@ -8,7 +8,7 @@ from datetime import datetime as dt
 import mplhep as hep
 import pickle
 import json
-hep.set_style("ATLAS")
+# hep.set_style("ATLAS")
 
 
 
@@ -22,7 +22,7 @@ data_file = os.path.join(current_dir, "threshold.pkl")
 threshold_data = pickle.load(open(data_file, "rb"))
 
 threshold_list = threshold_list = np.linspace(0, 1, 50)
-Z_list = threshold_data["significance regarding threshold for TES = 1.03"]
+Z_list = threshold_data["significance regarding threshold for TES = 1"]
 
 def annot_max(x,y, ax=None):
     xmax = x[np.argmax(y)]
@@ -52,13 +52,13 @@ plt.plot(threshold_list, Z_list, 'b.')
 plt.xlabel('threshold')
 plt.ylabel('Significance')
 # plt.legend(loc = 'lower right')
-plt.title(f"TES = 1.03")
-hep.atlas.text(loc=1, text = " ")
+plt.title(f"TES = 1.00")
+# hep.atlas.text(loc=1, text = " ")
 
 annot_max(threshold_list, Z_list)
 
 
-plot_file_Z_theshold = os.path.join(current_dir, "HGBC_Z_threshold_TES=1.03.png")
+plot_file_Z_theshold = os.path.join(current_dir, "HGBC_Z_threshold_TES=1.00.png")
 
 
 plt.savefig(plot_file_Z_theshold)

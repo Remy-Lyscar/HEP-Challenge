@@ -148,9 +148,9 @@ class Model():
         # self._validate()
         # self._compute_validation_result()
         # self._theta_plot()
-        # self.optimization_plots()
-        self.delta_mu_computation()
-        self._save_model()
+        self.optimization_plots()
+        # self.delta_mu_computation()
+        # self._save_model()
 
     def predict(self, test_set):
         """
@@ -222,7 +222,7 @@ class Model():
 
         n_hidden_inv = 4; n_hidden_inv_R = 4
         n_nodes_inv = 100; n_nodes_inv_R = 100
-        hp_lambda = 50
+        hp_lambda = 10
 
         inputs = Input(shape=(self.input_dim,))
 
@@ -1061,13 +1061,13 @@ class Model():
 
         # Other informations useful for making plots and comparisons afterwards
 
-        df_delta_mus = {
-            "delta_mu_stat": self.delta_mu_stat, 
-            "delta_mu_syst" : self.delta_mu_syst, 
-            "delta_mu_tot": self.delta_mu_tot
-        }
+        # df_delta_mus = {
+        #     "delta_mu_stat": self.delta_mu_stat, 
+        #     "delta_mu_syst" : self.delta_mu_syst, 
+        #     "delta_mu_tot": self.delta_mu_tot
+        # }
 
-        pickle.dump(df_delta_mus, open(df_delta_mus_path, "wb"))
+        # pickle.dump(df_delta_mus, open(df_delta_mus_path, "wb"))
 
         # df_events = pd.DataFrame(
         #     {
@@ -1079,24 +1079,24 @@ class Model():
 
         # pickle.dump(df_events, open(df_path_events, "wb"))
 
-        # df_threshold = pd.DataFrame(
-        #     {
-        #         "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
-        #         "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
-        #         "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
-        #         # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
-        #         # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
-        #         # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
-        #         # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
-        #         # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
-        #         # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
-        #         # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
-        #         # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
-        #         # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
-        #     }
-        # )
+        df_threshold = pd.DataFrame(
+            {
+                "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
+                "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
+                "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
+                # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
+                # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
+                # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
+                # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
+                # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
+                # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
+                # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
+                # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
+                # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
+            }
+        )
 
-        # pickle.dump(df_threshold, open(df_path_threshold, "wb"))
+        pickle.dump(df_threshold, open(df_path_threshold, "wb"))
 
         # df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
         # df_threshold.to_csv(df_path_threshold, index=False, sep="\t", encoding='utf-8')
