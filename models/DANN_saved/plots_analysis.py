@@ -95,7 +95,7 @@ threshold_data_file = os.path.join(current_dir, "threshold.pkl")
 threshold_data = pickle.load(open(threshold_data_file, "rb"))
 
 threshold_list = threshold_list = np.linspace(0.85, 0.95, 20)
-Z_list = threshold_data["significance regarding threshold for TES = 0.97"]
+Z_list = threshold_data["significance regarding threshold for TES = 1.03"]
 
 def annot_max(x,y, ax=None):
     xmax = x[np.argmax(y)]
@@ -125,13 +125,13 @@ plt.plot(threshold_list, Z_list, 'b.')
 plt.xlabel('threshold')
 plt.ylabel('Significance')
 # plt.legend(loc = 'lower right')
-plt.title(f"TES = 0.97")
+plt.title(f"TES = 1.03")
 # hep.atlas.text(loc=1, text = " ")
 
 annot_max(threshold_list, Z_list)
 
 
-plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=0.97.png")
+plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=1.03.png")
 
 
 plt.savefig(plot_file_Z_theshold)

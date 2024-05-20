@@ -335,7 +335,7 @@ class Model():
             }
         
 
-        validation_df = validation_df.copy()
+        validation_df = valid_df.copy()
         validation_df["weights"] = valid_weights
         validation_df["labels"] = valid_labels
 
