@@ -172,7 +172,7 @@ class Model():
 
         # test_array = test_df[self.variable]
 
-        # get n_roi\
+        # get n_roi
 
         test_hist ,_ = np.histogram(test_array,
                     bins=self.bins, density=False, weights=weight_clean)
@@ -181,9 +181,9 @@ class Model():
         mu_hat, mu_p16, mu_p84 = compute_result(test_hist,self.alpha_fun_dict,SYST=True)
         delta_mu_hat = mu_p84 - mu_p16
 
-        # mu_hat = mu_hat - self.calibration
-        # mu_p16 = mu_p16 - self.calibration
-        # mu_p84 = mu_p84 - self.calibration
+        mu_hat = mu_hat - self.calibration
+        mu_p16 = mu_p16 - self.calibration
+        mu_p84 = mu_p84 - self.calibration
 
 
         print(f"[*] --- mu_hat: {mu_hat}")
@@ -440,25 +440,63 @@ class Model():
         print("[*] --- score = ", self.holdout['score'])
 
     def mu_hat_calc(self):  
-        holdout_array = self.holdout['score']
-        weights_holdout = self.holdout['weights']
+       
+        X_holdout = self.holdout['data'].copy()
+        X_holdout['weights'] = self.holdout['weights'].copy()
+        X_holdout['labels'] = self.holdout['labels'].copy()
+
+        holdout_post = self.systematics(
+            data=X_holdout.copy(),
+            tes=1.0
+        ).data
+
+        label_holdout = holdout_post.pop('labels')
+        weights_holdout  = holdout_post.pop('weights')
+
+        X_holdout_sc = self.scaler.transform(holdout_post)
+        holdout_array = self._return_score(X_holdout_sc)
+        print("[*] --- Predicting Holdout set done")
+        print("[*] --- score = ", holdout_array)
 
         # compute gamma_roi
 
-        self.control_bins = int(self.bins * (1 - self.threshold))
+        self.control_bins = int(self.bin_nums * (1 - self.threshold))
 
-        holdout_hist , bins = np.histogram(holdout_array,
+        if self.SYST:
+            self.theta_function()
+
+        else:
+            s , b = self.nominal_histograms(1)
+            self.fit_dict = {
+                "gamma_roi": s,
+                "beta_roi": b,
+                "error_s": [0 for _ in range(self.bins)],
+                "error_b": [0 for _ in range(self.bins)]
+            }
+
+            self.fit_dict_control = {
+                "gamma_roi": s[-self.control_bins:],
+                "beta_roi": b[-self.control_bins:],
+                "error_s": [0 for _ in range(self.control_bins)],
+                "error_b": [0 for _ in range(self.control_bins)]
+            }
+
+            
+
+        holdout_hist , _ = np.histogram(holdout_array,
                     bins = self.bins, density=False, weights=weights_holdout)
         
+        
         holdout_hist_control = holdout_hist[-self.control_bins:]
+        # holdout_hist_control = (s + b)[-self.control_bins:]
 
-        self.theta_function()
-
-        mu_hat, mu_p16, mu_p84, alpha = compute_result(holdout_hist_control,self.fit_function_dict_control,SYST=True)
+        mu_hat, mu_p16, mu_p84, alpha = compute_result(holdout_hist_control,self.fit_dict_control,SYST=self.SYST,PLOT=False)
 
         self.calibration = mu_hat - 1
         
         print(f"[*] --- mu_hat: {mu_hat} --- mu_p16: {mu_p16} --- mu_p84: {mu_p84} --- alpha: {alpha}")
+
+        del self.holdout
 
 
 

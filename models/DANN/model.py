@@ -147,8 +147,9 @@ class Model():
         self.mu_hat_calc()
         # self._validate()
         # self._compute_validation_result()
-        self._theta_plot()
+        # self._theta_plot()
         # self.optimization_plots()
+        self.delta_mu_computation()
         self._save_model()
 
     def predict(self, test_set):
@@ -266,7 +267,8 @@ class Model():
             self.train_set["data"],
             self.train_set["labels"],
             self.train_set["weights"],
-            test_size=0.2,
+            test_size=0.6,
+            seed = 21,
             stratify=self.train_set["labels"]
         )
 
@@ -274,8 +276,9 @@ class Model():
             train_df,
             train_labels,
             train_weights,
-            test_size=0.5,
+            test_size=0.66,
             shuffle=True,
+            seed = 21,
             stratify=train_labels
         )
 
@@ -323,7 +326,7 @@ class Model():
             "settings": self.train_set["settings"]
         }
 
-        self.eval_set = [(self.train_set['data'], self.train_set['labels']), (valid_df.to_numpy(), valid_labels)]
+        # self.eval_set = [(self.train_set['data'], self.train_set['labels']), (valid_df.to_numpy(), valid_labels)]
 
         self.holdout = {
                 "data": holdout_df,
@@ -332,66 +335,82 @@ class Model():
             }
         
 
-        print("[*] Saving holdout set")
-        df_holdout  = pd.DataFrame(
-            holdout_df
-        )
+        validation_df = validation_df.copy()
+        validation_df["weights"] = valid_weights
+        validation_df["labels"] = valid_labels
 
-        df_labels = pd.DataFrame(holdout_labels)
-        df_weights = pd.DataFrame(holdout_weights)
+        validation_df = postprocess(validation_df)
+
+        valid_weights = validation_df.pop('weights')
+        valid_labels = validation_df.pop('labels')
+
+        self.validation = {
+                "data": validation_df,
+                "labels": valid_labels,
+                "weights": valid_weights
+            }
         
 
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        parent_dir = os.path.dirname(current_dir)
-        model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_holdout = os.path.join(model_dir, "holdout.pkl")
-        df_path_labels = os.path.join(model_dir, "holdout_labels.pkl")
-        df_path_weights = os.path.join(model_dir, "holdout_weights.pkl")
+        # print("[*] Saving holdout set")
+        # df_holdout  = pd.DataFrame(
+        #     holdout_df
+        # )
+
+        # df_labels = pd.DataFrame(holdout_labels)
+        # df_weights = pd.DataFrame(holdout_weights)
+        
+
+        # current_dir = os.path.dirname(os.path.abspath(__file__))
+        # parent_dir = os.path.dirname(current_dir)
+        # model_dir = os.path.join(parent_dir, "DANN_saved")  
+        # df_path_holdout = os.path.join(model_dir, "holdout.pkl")
+        # df_path_labels = os.path.join(model_dir, "holdout_labels.pkl")
+        # df_path_weights = os.path.join(model_dir, "holdout_weights.pkl")
 
 
-        if not os.path.exists(model_dir):
-            os.makedirs(model_dir)
+        # if not os.path.exists(model_dir):
+        #     os.makedirs(model_dir)
 
-        # df_holdout.to_csv(df_path_holdout,index=False, sep="\t", encoding='utf-8' )
-        # df_labels.to_csv(df_path_labels,index=False, sep="\t", encoding='utf-8' )
-        # df_weights.to_csv(df_path_weights,index=False, sep="\t", encoding='utf-8' )
-
-
-        pickle.dump(df_holdout, open(df_path_holdout, "wb"))
-        pickle.dump(df_labels, open(df_path_labels, "wb"))
-        pickle.dump(df_weights, open(df_path_weights, "wb"))
+        # # df_holdout.to_csv(df_path_holdout,index=False, sep="\t", encoding='utf-8' )
+        # # df_labels.to_csv(df_path_labels,index=False, sep="\t", encoding='utf-8' )
+        # # df_weights.to_csv(df_path_weights,index=False, sep="\t", encoding='utf-8' )
 
 
-        print("[*] Holdout saved")
+        # pickle.dump(df_holdout, open(df_path_holdout, "wb"))
+        # pickle.dump(df_labels, open(df_path_labels, "wb"))
+        # pickle.dump(df_weights, open(df_path_weights, "wb"))
 
-        self.validation_sets = []
-        for i in range(10):
-            # Loop 10 times to generate 10 validation sets
-            tes = round(np.random.uniform(0.9, 1.10), 2)
-            # apply systematics
-            valid_df_temp = valid_df.copy()
-            valid_df_temp["weights"] = valid_weights
-            valid_df_temp["labels"] = valid_labels
 
-            valid_with_systematics_temp = self.systematics(
-                data=valid_df_temp,
-                tes=tes
-            ).data
-            # valid_with_systematics_temp = postprocess(valid_df_temp)
+        # print("[*] Holdout saved")
 
-            valid_labels_temp = valid_with_systematics_temp.pop('labels')
-            valid_weights_temp = valid_with_systematics_temp.pop('weights')
-            valid_with_systematics = valid_with_systematics_temp.copy()
+        # self.validation_sets = []
+        # for i in range(10):
+        #     # Loop 10 times to generate 10 validation sets
+        #     tes = round(np.random.uniform(0.9, 1.10), 2)
+        #     # apply systematics
+        #     valid_df_temp = valid_df.copy()
+        #     valid_df_temp["weights"] = valid_weights
+        #     valid_df_temp["labels"] = valid_labels
 
-            self.validation_sets.append({
-                "data": valid_with_systematics,
-                "labels": valid_labels_temp,
-                "weights": valid_weights_temp,
-                "settings": self.train_set["settings"],
-                "tes": tes
-            })
-            del valid_with_systematics_temp
-            del valid_df_temp
+        #     valid_with_systematics_temp = self.systematics(
+        #         data=valid_df_temp,
+        #         tes=tes
+        #     ).data
+        #     # valid_with_systematics_temp = postprocess(valid_df_temp)
+
+        #     valid_labels_temp = valid_with_systematics_temp.pop('labels')
+        #     valid_weights_temp = valid_with_systematics_temp.pop('weights')
+        #     valid_with_systematics = valid_with_systematics_temp.copy()
+
+        #     self.validation_sets.append({
+        #         "data": valid_with_systematics,
+        #         "labels": valid_labels_temp,
+        #         "weights": valid_weights_temp,
+        #         "settings": self.train_set["settings"],
+        #         "tes": tes
+        #     })
+        #     del valid_with_systematics_temp
+        #     del valid_df_temp
 
         train_signal_weights = train_weights[train_labels == 1].sum()
         train_background_weights = train_weights[train_labels == 0].sum()
@@ -915,6 +934,7 @@ class Model():
             self.b_list_threshold.append(b_list)
             self.Z_list_threshold.append(Z_list)
             self.del_list_threshold.append(del_mu_stat_list)
+            self.del_list_threshold = self.del_list_threshold[:len(self.del_list_threshold) - 1]
         
 
 
@@ -944,6 +964,63 @@ class Model():
         print(f"Plotting time: {self.plot_time}")
 
 
+
+
+    def predict_valid(self, theta, threshold): 
+
+        X_validation = self.validation['data'].copy()
+        X_validation['weights'] = self.validation['weights'].copy()
+        X_validation['labels'] = self.validation['labels'].copy()
+
+        validation_post = self.systematics(
+            data = X_validation.copy(), 
+            tes = theta
+        ).data
+
+
+        label_validation = validation_post.pop('labels')
+        weights_validation = validation_post.pop('weights')
+        X_validation_sc = self.scaler.transform(validation_post)
+
+        validation_score = self._return_score(X_validation_sc)
+        # print(validation_score)
+
+        weights_validation_signal= weights_validation[label_validation == 1]
+        weights_validation_bkg = weights_validation[label_validation == 0]
+
+        score_validation_signal = validation_score[label_validation == 1]
+        score_validation_bkg = validation_score[label_validation == 0]
+
+        s = (weights_validation_signal[score_validation_signal > threshold]).sum()
+        if s == 0:
+            s = EPSILON
+
+        b = (weights_validation_bkg[score_validation_bkg > threshold]).sum()
+
+
+        print(f"s = {s} \n b = {b}")
+        return s, b
+
+
+
+    def delta_mu_computation(self):
+
+        # For a specific lambda, at Zmax, I compute 
+        # and then save the results for delta_mus
+
+        del_N = 0
+        s0, b0 = self.predict_valid(1, self.threshold)
+
+        sm, bm = self.predict_valid(0.97, self.threshold)
+
+        sp, bp = self.predict_valid(1.03, self.threshold)
+
+        self.delta_mu_stat = self.del_mu_stat(s0, b0)
+        self.delta_mu_syst = ((sm - s0) + (sp - s0))/(2*s0) + ((bm - b0) + (bp - b0))/(2*s0)
+        self.delta_mu_tot = self.delta_mu_stat + self.delta_mu_syst
+
+
+
     def _save_model(self):
 
         print("[*] - Saving Model")
@@ -955,6 +1032,7 @@ class Model():
         scaler_path = os.path.join(model_dir, "scaler.pkl")
         df_path_events = os.path.join(model_dir, "events.pkl")
         df_path_threshold = os.path.join(model_dir, "threshold.pkl")
+        df_delta_mus_path = os.path.join(model_dir, "delta_mus.pkl")
 
 
         print("[*] Saving Model")
@@ -983,15 +1061,23 @@ class Model():
 
         # Other informations useful for making plots and comparisons afterwards
 
-        df_events = pd.DataFrame(
-            {
-                "theta_list" : self.theta_list, 
-                "s_list" : self.s_list, 
-                "b_list" : self.b_list,
-            }
-        )
+        df_delta_mus = {
+            "delta_mu_stat": self.delta_mu_stat, 
+            "delta_mu_syst" : self.delta_mu_syst, 
+            "delta_mu_tot": self.delta_mu_tot
+        }
 
-        pickle.dump(df_events, open(df_path_events, "wb"))
+        pickle.dump(df_delta_mus, open(df_delta_mus_path, "wb"))
+
+        # df_events = pd.DataFrame(
+        #     {
+        #         "theta_list" : self.theta_list, 
+        #         "s_list" : self.s_list, 
+        #         "b_list" : self.b_list,
+        #     }
+        # )
+
+        # pickle.dump(df_events, open(df_path_events, "wb"))
 
         # df_threshold = pd.DataFrame(
         #     {

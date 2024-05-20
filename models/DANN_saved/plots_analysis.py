@@ -62,7 +62,7 @@ plt.plot(theta_list, s_list_HGBC, 'b.', label = f'HGBC: std = {std_s_HGBC:.5f}')
 plt.xlabel('TES')
 plt.ylabel('Number of signal events in the ROI')
 hep.atlas.text(loc=1, text = " ")
-plt.legend(loc = 'best')
+plt.legend(loc = 'lower right')
 
 plot_file_s = os.path.join(current_dir, "s_events_comparison")
 
