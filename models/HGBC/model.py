@@ -204,7 +204,7 @@ class Model():
             self.train_set["labels"],
             self.train_set["weights"],
             test_size=0.6,
-            seed = 21,
+            random_state = 21,
             stratify=self.train_set["labels"]
         )
 
@@ -214,7 +214,7 @@ class Model():
             train_weights,
             test_size=0.66,
             shuffle=True,
-            seed = 21, 
+            random_state = 21, 
             stratify=train_labels
         )
 

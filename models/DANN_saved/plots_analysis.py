@@ -8,7 +8,7 @@ from datetime import datetime as dt
 import mplhep as hep
 import pickle 
 import json
-hep.set_style("ATLAS")
+# hep.set_style("ATLAS")
 
 
 
@@ -61,7 +61,7 @@ plt.plot(theta_list, s_list_DANN, 'r.', label = f'DANN: std = {std_s_DANN:.5f}')
 plt.plot(theta_list, s_list_HGBC, 'b.', label = f'HGBC: std = {std_s_HGBC:.5f}')
 plt.xlabel('TES')
 plt.ylabel('Number of signal events in the ROI')
-hep.atlas.text(loc=1, text = " ")
+# hep.atlas.text(loc=1, text = " ")
 plt.legend(loc = 'lower right')
 
 plot_file_s = os.path.join(current_dir, "s_events_comparison")
@@ -76,7 +76,7 @@ plt.plot(theta_list, b_list_DANN, 'r.', label = f'DANN: std = {std_b_DANN:.5f}')
 plt.plot(theta_list, b_list_HGBC, 'b.', label = f'HGBC: std = {std_b_HGBC:.5f}')
 plt.xlabel('TES')
 plt.ylabel('Number of background events in the ROI')
-hep.atlas.text(loc=1, text = " ")
+# hep.atlas.text(loc=1, text = " ")
 plt.legend(loc = 'best')
 
 plot_file_b = os.path.join(current_dir, "b_events_comparison")
@@ -91,48 +91,48 @@ plt.close(fig_b)
 
 
 
-# threshold_data_file = os.path.join(current_dir, "threshold.pkl")
-# threshold_data = pickle.load(open(threshold_data_file, "rb"))
+threshold_data_file = os.path.join(current_dir, "threshold.pkl")
+threshold_data = pickle.load(open(threshold_data_file, "rb"))
 
-# threshold_list = threshold_list = np.linspace(0.85, 0.95, 20)
-# Z_list = threshold_data["significance regarding threshold for TES = 0.97"]
+threshold_list = threshold_list = np.linspace(0.85, 0.95, 20)
+Z_list = threshold_data["significance regarding threshold for TES = 0.97"]
 
-# def annot_max(x,y, ax=None):
-#     xmax = x[np.argmax(y)]
-#     ymax = y.max()
-#     text= "threshold={:.3f}, Z_max={:.3f}".format(xmax, ymax)
-#     if not ax:
-#         ax=plt.gca()
-#     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-#     # arrowprops=dict(arrowstyle="->",connectionstyle="angle,angleA=0,angleB=60")
-#     # kw = dict(xycoords='data',textcoords="axes fraction",
-#     #           arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
-#     kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha="right", va="top")
-#     ax.annotate(text, xy=(xmax, ymax), xytext=(0.5,0.1), **kw)
+def annot_max(x,y, ax=None):
+    xmax = x[np.argmax(y)]
+    ymax = y.max()
+    text= "threshold={:.3f}, Z_max={:.3f}".format(xmax, ymax)
+    if not ax:
+        ax=plt.gca()
+    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+    # arrowprops=dict(arrowstyle="->",connectionstyle="angle,angleA=0,angleB=60")
+    # kw = dict(xycoords='data',textcoords="axes fraction",
+    #           arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
+    kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha="right", va="top")
+    ax.annotate(text, xy=(xmax, ymax), xytext=(0.5,0.1), **kw)
     
-#     x_bounds = ax.get_xbound()
-#     y_bounds = ax.get_ybound()
-#     ax.set_xlim(x_bounds[0], x_bounds[1])
-#     ax.set_ylim(y_bounds[0], y_bounds[1])
-#     plt.vlines(xmax, y_bounds[0], ymax, colors = 'r', linestyles='dashed')
-#     plt.hlines(ymax, x_bounds[0] ,xmax, colors='r', linestyles='dashed')
+    x_bounds = ax.get_xbound()
+    y_bounds = ax.get_ybound()
+    ax.set_xlim(x_bounds[0], x_bounds[1])
+    ax.set_ylim(y_bounds[0], y_bounds[1])
+    plt.vlines(xmax, y_bounds[0], ymax, colors = 'r', linestyles='dashed')
+    plt.hlines(ymax, x_bounds[0] ,xmax, colors='r', linestyles='dashed')
 
 
 
 
-# fig_Z_threshold = plt.figure()
-# plt.plot(threshold_list, Z_list, 'b.')
-# plt.xlabel('threshold')
-# plt.ylabel('Significance')
-# # plt.legend(loc = 'lower right')
-# plt.title(f"TES = 0.97")
+fig_Z_threshold = plt.figure()
+plt.plot(threshold_list, Z_list, 'b.')
+plt.xlabel('threshold')
+plt.ylabel('Significance')
+# plt.legend(loc = 'lower right')
+plt.title(f"TES = 0.97")
 # hep.atlas.text(loc=1, text = " ")
 
-# annot_max(threshold_list, Z_list)
+annot_max(threshold_list, Z_list)
 
 
-# plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=0.97.png")
+plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=0.97.png")
 
 
-# plt.savefig(plot_file_Z_theshold)
-# plt.close(fig_Z_threshold)
+plt.savefig(plot_file_Z_theshold)
+plt.close(fig_Z_threshold)
