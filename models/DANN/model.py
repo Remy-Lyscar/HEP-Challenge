@@ -823,7 +823,7 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
+        df_path_threshold = os.path.join(model_dir, "threshold100.pkl")
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
@@ -901,7 +901,7 @@ class Model():
             hep.atlas.text(loc=1, text = " ")
 
             save_path_Z_threshold = os.path.join(parent_dir, "DANN_saved")
-            plot_file_Z_theshold = os.path.join(save_path_Z_threshold, f"DANN_Z_threshold_TES={thetas[i]}.png")
+            plot_file_Z_theshold = os.path.join(save_path_Z_threshold, f"DANN_Z_threshold_TES={thetas[i]}_100.png")
 
             if not os.path.exists(save_path_Z_threshold):
                 os.makedirs(save_path_Z_threshold)
