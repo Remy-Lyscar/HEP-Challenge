@@ -830,7 +830,7 @@ class Model():
 
 
         # Plot: significance depending on threshold 
-        threshold_list = np.linspace(0.85, 0.95, 20) 
+        threshold_list = np.linspace(0.94, 1, 10) 
         self.threshold_list = threshold_list
 
         self.s_list_threshold = []
