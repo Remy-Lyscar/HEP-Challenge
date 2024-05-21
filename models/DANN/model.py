@@ -222,7 +222,7 @@ class Model():
 
         n_hidden_inv = 4; n_hidden_inv_R = 4
         n_nodes_inv = 100; n_nodes_inv_R = 100
-        hp_lambda = 10
+        hp_lambda = 1
 
         inputs = Input(shape=(self.input_dim,))
 
@@ -830,7 +830,7 @@ class Model():
 
 
         # Plot: significance depending on threshold 
-        threshold_list = np.linspace(0.94, 1, 10) 
+        threshold_list = np.linspace(0.8, 1, 20) 
         self.threshold_list = threshold_list
 
         self.s_list_threshold = []
