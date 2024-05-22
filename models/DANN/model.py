@@ -823,7 +823,7 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_threshold = os.path.join(model_dir, "threshold1.pkl")
+        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
@@ -1032,7 +1032,7 @@ class Model():
         scaler_path = os.path.join(model_dir, "scaler1.pkl")
         df_path_events = os.path.join(model_dir, "events.pkl")
         df_path_threshold = os.path.join(model_dir, "threshold.pkl")
-        df_delta_mus_path = os.path.join(model_dir, "delta_mus_1.pkl")
+        df_delta_mus_path = os.path.join(model_dir, "delta_mus_10.pkl")
 
 
         print("[*] Saving Model")
