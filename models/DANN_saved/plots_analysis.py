@@ -141,7 +141,7 @@ parent_dir = os.path.dirname(current_dir)
 threshold_data_file = os.path.join(current_dir, "threshold.pkl")
 threshold_data = pickle.load(open(threshold_data_file, "rb"))
 
-threshold_list = threshold_list = np.linspace(0.85, 0.95, 20)
+threshold_list = threshold_list = np.linspace(0.8, 1, 20)
 Z_list = threshold_data["significance regarding threshold for TES = 1.03"]
 
 def annot_max(x,y, ax=None):

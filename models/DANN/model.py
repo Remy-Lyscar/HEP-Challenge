@@ -148,9 +148,9 @@ class Model():
         # self._validate()
         # self._compute_validation_result()
         # self._theta_plot()
-        self.optimization_plots()
-        # self.delta_mu_computation()
-        # self._save_model()
+        # self.optimization_plots()
+        self.delta_mu_computation()
+        self._save_model()
 
     def predict(self, test_set):
         """
@@ -823,14 +823,14 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_threshold = os.path.join(model_dir, "threshold100.pkl")
+        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
 
 
         # Plot: significance depending on threshold 
-        threshold_list = np.linspace(0.8, 1, 20) 
+        threshold_list = np.linspace(0.85, 1, 15) 
         self.threshold_list = threshold_list
 
         self.s_list_threshold = []
@@ -901,7 +901,7 @@ class Model():
             hep.atlas.text(loc=1, text = " ")
 
             save_path_Z_threshold = os.path.join(parent_dir, "DANN_saved")
-            plot_file_Z_theshold = os.path.join(save_path_Z_threshold, f"DANN_Z_threshold_TES={thetas[i]}_100.png")
+            plot_file_Z_theshold = os.path.join(save_path_Z_threshold, f"DANN_Z_threshold_TES={thetas[i]}.png")
 
             if not os.path.exists(save_path_Z_threshold):
                 os.makedirs(save_path_Z_threshold)
@@ -1027,12 +1027,12 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")   
-        model_path = os.path.join(model_dir, "model.h5")
-        settings_path = os.path.join(model_dir, "settings.pkl")
-        scaler_path = os.path.join(model_dir, "scaler.pkl")
+        model_path = os.path.join(model_dir, "model100.h5")
+        settings_path = os.path.join(model_dir, "settings100.pkl")
+        scaler_path = os.path.join(model_dir, "scaler100.pkl")
         df_path_events = os.path.join(model_dir, "events.pkl")
         df_path_threshold = os.path.join(model_dir, "threshold.pkl")
-        df_delta_mus_path = os.path.join(model_dir, "delta_mus.pkl")
+        df_delta_mus_path = os.path.join(model_dir, "delta_mus_100.pkl")
 
 
         print("[*] Saving Model")
@@ -1061,13 +1061,13 @@ class Model():
 
         # Other informations useful for making plots and comparisons afterwards
 
-        # df_delta_mus = {
-        #     "delta_mu_stat": self.delta_mu_stat, 
-        #     "delta_mu_syst" : self.delta_mu_syst, 
-        #     "delta_mu_tot": self.delta_mu_tot
-        # }
+        df_delta_mus = {
+            "delta_mu_stat": self.delta_mu_stat, 
+            "delta_mu_syst" : self.delta_mu_syst, 
+            "delta_mu_tot": self.delta_mu_tot
+        }
 
-        # pickle.dump(df_delta_mus, open(df_delta_mus_path, "wb"))
+        pickle.dump(df_delta_mus, open(df_delta_mus_path, "wb"))
 
         # df_events = pd.DataFrame(
         #     {
@@ -1079,24 +1079,24 @@ class Model():
 
         # pickle.dump(df_events, open(df_path_events, "wb"))
 
-        df_threshold = pd.DataFrame(
-            {
-                "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
-                "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
-                "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
-                # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
-                # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
-                # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
-                # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
-                # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
-                # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
-                # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
-                # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
-                # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
-            }
-        )
+        # df_threshold = pd.DataFrame(
+        #     {
+        #         "significance regarding threshold for TES = 0.97": self.Z_list_threshold[0],
+        #         "significance regarding threshold for TES = 1": self.Z_list_threshold[1],
+        #         "significance regarding threshold for TES = 1.03": self.Z_list_threshold[2],
+        #         # "s events regarding threshold for TES = 1": self.s_list_threshold[1], 
+        #         # "s events regarding threshold for TES = 0.97": self.s_list_threshold[0],
+        #         # "s events regarding threshold for TES = 1.03": self.s_list_threshold[2],
+        #         # "b events regarding threshold for TES = 1": self.b_list_threshold[1],
+        #         # "b events regarding threshold for TES = 0.97": self.b_list_threshold[0],
+        #         # "b events regarding threshold for TES = 1.03": self.b_list_threshold[2],
+        #         # "del_mu_stat regarding threshold for TES = 1": self.del_list_threshold[1],
+        #         # "del_mu_stat regarding threshold for TES = 0.97": self.del_list_threshold[0],
+        #         # "del_mu_stat regarding threshold for TES = 1.03": self.del_list_threshold[2],
+        #     }
+        # )
 
-        pickle.dump(df_threshold, open(df_path_threshold, "wb"))
+        # pickle.dump(df_threshold, open(df_path_threshold, "wb"))
 
         # df_events.to_csv(df_path_events, index=False, sep="\t", encoding='utf-8')
         # df_threshold.to_csv(df_path_threshold, index=False, sep="\t", encoding='utf-8')
