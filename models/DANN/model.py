@@ -222,7 +222,7 @@ class Model():
 
         n_hidden_inv = 4; n_hidden_inv_R = 4
         n_nodes_inv = 100; n_nodes_inv_R = 100
-        hp_lambda = 100
+        hp_lambda = 1
 
         inputs = Input(shape=(self.input_dim,))
 
@@ -1027,12 +1027,12 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")   
-        model_path = os.path.join(model_dir, "model100.h5")
-        settings_path = os.path.join(model_dir, "settings100.pkl")
-        scaler_path = os.path.join(model_dir, "scaler100.pkl")
+        model_path = os.path.join(model_dir, "model1.h5")
+        settings_path = os.path.join(model_dir, "settings1.pkl")
+        scaler_path = os.path.join(model_dir, "scaler1.pkl")
         df_path_events = os.path.join(model_dir, "events.pkl")
         df_path_threshold = os.path.join(model_dir, "threshold.pkl")
-        df_delta_mus_path = os.path.join(model_dir, "delta_mus_100.pkl")
+        df_delta_mus_path = os.path.join(model_dir, "delta_mus_1.pkl")
 
 
         print("[*] Saving Model")
