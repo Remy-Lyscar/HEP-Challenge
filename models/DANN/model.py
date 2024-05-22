@@ -148,9 +148,9 @@ class Model():
         # self._validate()
         # self._compute_validation_result()
         # self._theta_plot()
-        self.optimization_plots()
-        # self.delta_mu_computation()
-        # self._save_model()
+        # self.optimization_plots()
+        self.delta_mu_computation()
+        self._save_model()
 
     def predict(self, test_set):
         """
@@ -222,7 +222,7 @@ class Model():
 
         n_hidden_inv = 4; n_hidden_inv_R = 4
         n_nodes_inv = 100; n_nodes_inv_R = 100
-        hp_lambda = 10
+        hp_lambda = 100
 
         inputs = Input(shape=(self.input_dim,))
 
