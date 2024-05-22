@@ -120,7 +120,7 @@ class Model():
         # Intialize class variables
         self.validation_sets = None
         # self.threshold_candidates = np.arange(0.4, 0.95, 0.02)
-        self.threshold = 0.945
+        self.threshold = 0.95
         self.bins = 1
         self.scaler = StandardScaler()
         self.mu_scan = np.linspace(0, 4, 100)   
@@ -823,14 +823,14 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
+        df_path_threshold = os.path.join(model_dir, "threshold1.pkl")
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
 
 
         # Plot: significance depending on threshold 
-        threshold_list = np.linspace(0.85, 1, 15) 
+        threshold_list = np.linspace(0.85, 0.97, 24) 
         self.threshold_list = threshold_list
 
         self.s_list_threshold = []

@@ -138,48 +138,128 @@ parent_dir = os.path.dirname(current_dir)
 
 
 
-threshold_data_file = os.path.join(current_dir, "threshold.pkl")
-threshold_data = pickle.load(open(threshold_data_file, "rb"))
+# threshold_data_file = os.path.join(current_dir, "threshold.pkl")
+# threshold_data = pickle.load(open(threshold_data_file, "rb"))
 
-threshold_list = threshold_list = np.linspace(0.8, 1, 20)
-Z_list = threshold_data["significance regarding threshold for TES = 1.03"]
+# threshold_list = threshold_list = np.linspace(0.8, 1, 20)
+# Z_list = threshold_data["significance regarding threshold for TES = 1.03"]
 
-def annot_max(x,y, ax=None):
-    xmax = x[np.argmax(y)]
-    ymax = y.max()
-    text= "threshold={:.3f}, Z_max={:.3f}".format(xmax, ymax)
-    if not ax:
-        ax=plt.gca()
-    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-    # arrowprops=dict(arrowstyle="->",connectionstyle="angle,angleA=0,angleB=60")
-    # kw = dict(xycoords='data',textcoords="axes fraction",
-    #           arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
-    kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha="right", va="top")
-    ax.annotate(text, xy=(xmax, ymax), xytext=(0.5,0.1), **kw)
+# def annot_max(x,y, ax=None):
+#     xmax = x[np.argmax(y)]
+#     ymax = y.max()
+#     text= "threshold={:.3f}, Z_max={:.3f}".format(xmax, ymax)
+#     if not ax:
+#         ax=plt.gca()
+#     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+#     # arrowprops=dict(arrowstyle="->",connectionstyle="angle,angleA=0,angleB=60")
+#     # kw = dict(xycoords='data',textcoords="axes fraction",
+#     #           arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
+#     kw = dict(xycoords='data',textcoords="axes fraction", bbox=bbox_props, ha="right", va="top")
+#     ax.annotate(text, xy=(xmax, ymax), xytext=(0.5,0.1), **kw)
     
-    x_bounds = ax.get_xbound()
-    y_bounds = ax.get_ybound()
-    ax.set_xlim(x_bounds[0], x_bounds[1])
-    ax.set_ylim(y_bounds[0], y_bounds[1])
-    plt.vlines(xmax, y_bounds[0], ymax, colors = 'r', linestyles='dashed')
-    plt.hlines(ymax, x_bounds[0] ,xmax, colors='r', linestyles='dashed')
+#     x_bounds = ax.get_xbound()
+#     y_bounds = ax.get_ybound()
+#     ax.set_xlim(x_bounds[0], x_bounds[1])
+#     ax.set_ylim(y_bounds[0], y_bounds[1])
+#     plt.vlines(xmax, y_bounds[0], ymax, colors = 'r', linestyles='dashed')
+#     plt.hlines(ymax, x_bounds[0] ,xmax, colors='r', linestyles='dashed')
 
 
 
 
-fig_Z_threshold = plt.figure()
-plt.plot(threshold_list, Z_list, 'b.')
-plt.xlabel('threshold')
-plt.ylabel('Significance')
+# fig_Z_threshold = plt.figure()
+# plt.plot(threshold_list, Z_list, 'b.')
+# plt.xlabel('threshold')
+# plt.ylabel('Significance')
+# # plt.legend(loc = 'lower right')
+# plt.title(f"TES = 1.03")
+# # hep.atlas.text(loc=1, text = " ")
+
+# annot_max(threshold_list, Z_list)
+
+
+# plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=1.03.png")
+
+
+# plt.savefig(plot_file_Z_theshold)
+# plt.close(fig_Z_threshold)
+
+
+
+# plots of delta_mus as a function of lambda
+
+
+
+
+deltamu_file50 = os.path.join(current_dir, "DANN_saved4 - 4_4_4_100_lambda50_epochs4_threshold = 0.945, old_div", "delta_mus.pkl")
+deltamu_file10 = os.path.join(current_dir, "DANN_saved5 - lambda = 10_threshold= 0.960 , new_div", "delta_mus.pkl")
+deltamu_file1= os.path.join(current_dir, "DANN_saved6 - lambda1_threshold= , new div", "delta_mus.pkl")
+deltamu_file100 = os.path.join(current_dir, "DANN_saved6_lambda100_threshold =0.958 , nediv", "delta_mus.pkl")
+
+deltamu_data50 = pickle.load(open(deltamu_file50, "rb"))
+deltamu_data1 = pickle.load(open(deltamu_file1, "rb"))
+deltamu_data100 = pickle.load(open(deltamu_file100, "rb"))
+
+
+deltamu_stat50 = deltamu_data50["delta_mu_stat"]
+deltamu_syst50 = deltamu_data50["delta_mu_syst"]
+deltamu_tot50 = deltamu_data50["delta_mu_tot"]
+
+deltamu_stat1 = deltamu_data1["delta_mu_stat"]
+deltamu_syst1 = deltamu_data1["delta_mu_syst"]
+deltamu_tot1 = deltamu_data1["delta_mu_tot"]
+
+deltamu_stat100 = deltamu_data100["delta_mu_stat"]
+deltamu_syst100 = deltamu_data100["delta_mu_syst"]
+deltamu_tot100 = deltamu_data100["delta_mu_tot"]
+
+lambda_list = [1, 50, 100]
+
+stat_list = [deltamu_stat1, deltamu_stat50, deltamu_stat100]
+syst_list = [deltamu_syst1, deltamu_syst50, deltamu_syst100]
+tot_list = [deltamu_tot1, deltamu_tot50, deltamu_tot100]
+
+
+fig_stat = plt.figure()
+plt.plot(lambda_list, stat_list)
+plt.xlabel('lambdas')
+plt.ylabel('delta_mu_stat')
 # plt.legend(loc = 'lower right')
-plt.title(f"TES = 1.03")
 # hep.atlas.text(loc=1, text = " ")
 
-annot_max(threshold_list, Z_list)
+
+plot_file_stat = os.path.join(current_dir, "stat_lambda.png")
 
 
-plot_file_Z_theshold = os.path.join(current_dir, "DANN_Z_threshold_analysis_TES=1.03.png")
+plt.savefig(plot_file_stat)
+plt.close(fig_stat)
 
 
-plt.savefig(plot_file_Z_theshold)
-plt.close(fig_Z_threshold)
+fig_syst = plt.figure()
+plt.plot(lambda_list, syst_list)
+plt.xlabel('lambdas')
+plt.ylabel('delta_mu_syst')
+# plt.legend(loc = 'lower right')
+# hep.atlas.text(loc=1, text = " ")
+
+
+plot_file_syst = os.path.join(current_dir, "syst_lambda.png")
+
+
+plt.savefig(plot_file_syst)
+plt.close(fig_syst)
+
+
+fig_tot = plt.figure()
+plt.plot(lambda_list, tot_list)
+plt.xlabel('lambdas')
+plt.ylabel('delta_mu_tot')
+# plt.legend(loc = 'lower right')
+# hep.atlas.text(loc=1, text = " ")
+
+
+plot_file_tot = os.path.join(current_dir, "tot_lambda.png")
+
+
+plt.savefig(plot_file_tot)
+plt.close(fig_tot)
