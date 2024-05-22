@@ -148,9 +148,9 @@ class Model():
         # self._validate()
         # self._compute_validation_result()
         # self._theta_plot()
-        # self.optimization_plots()
-        self.delta_mu_computation()
-        self._save_model()
+        self.optimization_plots()
+        # self.delta_mu_computation()
+        # self._save_model()
 
     def predict(self, test_set):
         """
@@ -222,7 +222,7 @@ class Model():
 
         n_hidden_inv = 4; n_hidden_inv_R = 4
         n_nodes_inv = 100; n_nodes_inv_R = 100
-        hp_lambda = 1
+        hp_lambda = 10
 
         inputs = Input(shape=(self.input_dim,))
 
@@ -823,7 +823,7 @@ class Model():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         parent_dir = os.path.dirname(current_dir)
         model_dir = os.path.join(parent_dir, "DANN_saved")  
-        df_path_threshold = os.path.join(model_dir, "threshold.pkl")
+        df_path_threshold = os.path.join(model_dir, "threshold500.pkl")
 
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
