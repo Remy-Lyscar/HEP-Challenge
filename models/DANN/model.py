@@ -120,7 +120,7 @@ class Model():
         # Intialize class variables
         self.validation_sets = None
         # self.threshold_candidates = np.arange(0.4, 0.95, 0.02)
-        self.threshold = 0.95
+        self.threshold = 0.96
         self.bins = 1
         self.scaler = StandardScaler()
         self.mu_scan = np.linspace(0, 4, 100)   
@@ -1032,7 +1032,7 @@ class Model():
         scaler_path = os.path.join(model_dir, "scaler1.pkl")
         df_path_events = os.path.join(model_dir, "events.pkl")
         df_path_threshold = os.path.join(model_dir, "threshold.pkl")
-        df_delta_mus_path = os.path.join(model_dir, "delta_mus_10.pkl")
+        df_delta_mus_path = os.path.join(model_dir, "delta_mus_100.pkl")
 
 
         print("[*] Saving Model")
